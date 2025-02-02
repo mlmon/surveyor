@@ -1,23 +1,31 @@
 package main
 
 import (
+	"github.com/mlmon/surveyor/source"
 	"log/slog"
 	"os"
 )
 
 func main() {
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
-	logger.Info("hello world")
-}
 
-type SourceFn func() (*SourceRecords, error)
+	fns := []source.Fn{
+		OsRelease("/etc/os-release"),
+		// TODO: Nvidia SMI
+		// TODO: lsmod+modinfo
+		Packages,
+		ProcFS("/proc/sys"),
+		Uname,
+	}
 
-type SourceRecords struct {
-	Source  string   `json:"source"`
-	Records []Record `json:"records"`
-}
-
-type Record struct {
-	Key   string `json:"key"`
-	Value string `json:"value"`
+	var records []*source.Records
+	for _, fn := range fns {
+		rec, err := fn()
+		if err != nil {
+			logger.Error("error processing source", "err", err)
+			continue
+		}
+		records = append(records, rec)
+		logger.Info("processed source", "source", rec.Source, "entries", len(rec.Entries))
+	}
 }

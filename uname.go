@@ -2,25 +2,29 @@ package main
 
 import (
 	"bytes"
+	"github.com/mlmon/surveyor/source"
 	"golang.org/x/sys/unix"
 )
 
-func Uname() (*SourceRecords, error) {
+var UnixUname = unix.Uname
+
+func Uname() (*source.Records, error) {
 	var uname unix.Utsname
-	err := unix.Uname(&uname)
+	err := UnixUname(&uname)
 	if err != nil {
 		return nil, err
 	}
-	var records []Record
+	var records []source.Record
 
-	records = append(records, Record{"machine", b2s(uname.Machine[:])})
-	records = append(records, Record{"nodename", b2s(uname.Nodename[:])})
-	records = append(records, Record{"release", b2s(uname.Release[:])})
-	records = append(records, Record{"sysname", b2s(uname.Sysname[:])})
-	records = append(records, Record{"version", b2s(uname.Version[:])})
-	return &SourceRecords{
+	records = append(records, source.Record{Key: "machine", Value: b2s(uname.Machine[:])})
+	records = append(records, source.Record{Key: "nodename", Value: b2s(uname.Nodename[:])})
+	records = append(records, source.Record{Key: "release", Value: b2s(uname.Release[:])})
+	records = append(records, source.Record{Key: "sysname", Value: b2s(uname.Sysname[:])})
+	records = append(records, source.Record{Key: "version", Value: b2s(uname.Version[:])})
+
+	return &source.Records{
 		Source:  "uname",
-		Records: records,
+		Entries: records,
 	}, nil
 }
 
