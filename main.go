@@ -11,6 +11,7 @@ func main() {
 
 	fns := []source.Fn{
 		OsRelease("/etc/os-release"),
+		KernelModules("/proc/modules"),
 		// TODO: Nvidia SMI
 		// TODO: lsmod+modinfo
 		Packages,

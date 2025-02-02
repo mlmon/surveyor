@@ -2,7 +2,7 @@ package main_test
 
 import (
 	"errors"
-	"github.com/gogunit/gunit/hammy"
+	a "github.com/gogunit/gunit/hammy"
 	"github.com/mlmon/surveyor"
 	"github.com/mlmon/surveyor/source"
 	"golang.org/x/sys/unix"
@@ -12,9 +12,9 @@ import (
 func Test_uname_successful(t *testing.T) {
 	defer stubUname(unameStub)()
 
-	assert := hammy.New(t)
+	assert := a.New(t)
 	records, _ := main.Uname()
-	assert.Is(hammy.Struct(records).EqualTo(&source.Records{
+	assert.Is(a.Struct(records).EqualTo(&source.Records{
 		Source: "uname",
 		Entries: []source.Record{
 			{Key: "machine", Value: "aarch64"},
@@ -29,9 +29,9 @@ func Test_uname_successful(t *testing.T) {
 func Test_uname_failure(t *testing.T) {
 	defer stubUname(unameErrorStub)()
 
-	assert := hammy.New(t)
+	assert := a.New(t)
 	_, err := main.Uname()
-	assert.Is(hammy.Error(err))
+	assert.Is(a.Error(err))
 }
 
 func stubUname(fn func(*unix.Utsname) error) func() {

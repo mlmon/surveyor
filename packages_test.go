@@ -1,7 +1,7 @@
 package main_test
 
 import (
-	"github.com/gogunit/gunit/hammy"
+	a "github.com/gogunit/gunit/hammy"
 	"github.com/mlmon/surveyor"
 	"github.com/mlmon/surveyor/source"
 	"os"
@@ -9,34 +9,34 @@ import (
 )
 
 func Test_which_fails_with_non_existent_binary(t *testing.T) {
-	assert := hammy.New(t)
+	assert := a.New(t)
 	hasBinary := main.Which("plants-and-bees-knees")
-	assert.Is(hammy.False(hasBinary))
+	assert.Is(a.False(hasBinary))
 }
 
 func Test_which_succeeds_with_sh_binary(t *testing.T) {
-	assert := hammy.New(t)
+	assert := a.New(t)
 	hasBinary := main.Which("sh")
-	assert.Is(hammy.True(hasBinary))
+	assert.Is(a.True(hasBinary))
 }
 
 func Test_packages_fails_when_no_package_manager_found(t *testing.T) {
 	defer stubFalseyWhich()()
 
-	assert := hammy.New(t)
+	assert := a.New(t)
 	_, err := main.Packages()
-	assert.Is(hammy.Error(err))
+	assert.Is(a.Error(err))
 }
 
 func Test_debian_packages_success(t *testing.T) {
 	defer stubTruthyWhich()()
 	defer stubDpkgList()()
 
-	assert := hammy.New(t)
+	assert := a.New(t)
 
 	rec, err := main.Packages()
-	assert.Is(hammy.NilError(err))
-	assert.Is(hammy.Struct(rec).EqualTo(&source.Records{
+	assert.Is(a.NilError(err))
+	assert.Is(a.Struct(rec).EqualTo(&source.Records{
 		Source: "package-list",
 		Entries: []source.Record{
 			{Key: "accountsservice", Value: "22.07.5-2ubuntu1.5"},
