@@ -13,7 +13,8 @@ import (
 func which(binary string) bool {
 	err := exec.Command("which", binary).Run()
 	if err != nil {
-		if exitError, ok := err.(*exec.ExitError); ok {
+		var exitError *exec.ExitError
+		if errors.As(err, &exitError) {
 			return exitError.ExitCode() == 0
 		}
 	}
@@ -62,5 +63,13 @@ func Packages() (*source.Records, error) {
 }
 
 func dpkgList() ([]byte, error) {
-	return nil, nil
+	b, err := exec.Command("dpkg-query", "-l").Output()
+	if err != nil {
+		var exitError *exec.ExitError
+		if errors.As(err, &exitError) {
+			return nil, exitError
+		}
+	}
+
+	return b, nil
 }

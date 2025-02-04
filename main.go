@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/mlmon/surveyor/source"
 	"log/slog"
 	"os"
@@ -11,7 +13,7 @@ func main() {
 
 	fns := []source.Fn{
 		OsRelease("/etc/os-release"),
-		KernelModules("/proc/modules"),
+		KernelModules("/proc/modules", "/lib/modules"),
 		// TODO: Nvidia SMI
 		// TODO: lsmod+modinfo
 		Packages,
@@ -29,4 +31,10 @@ func main() {
 		records = append(records, rec)
 		logger.Info("processed source", "source", rec.Source, "entries", len(rec.Entries))
 	}
+
+	b, err := json.MarshalIndent(records, "", "  ")
+	if err != nil {
+		logger.Error("error marshaling records", "err", err)
+	}
+	fmt.Printf("%s\n", string(b))
 }

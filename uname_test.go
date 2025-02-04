@@ -19,7 +19,7 @@ func Test_uname_successful(t *testing.T) {
 		Entries: []source.Record{
 			{Key: "machine", Value: "aarch64"},
 			{Key: "nodename", Value: "715bf308c176"},
-			{Key: "release", Value: "6.12.5-orbstack-00287-gf8da5d508983"},
+			{Key: "release", Value: "6.5.0-1024-aws"},
 			{Key: "sysname", Value: "Linux"},
 			{Key: "version", Value: "#19 SMP Tue Dec 17 08:07:20 UTC 2024"},
 		},
@@ -43,7 +43,7 @@ func stubUname(fn func(*unix.Utsname) error) func() {
 func unameStub(uname *unix.Utsname) error {
 	copy(uname.Machine[:], "aarch64")
 	copy(uname.Nodename[:], "715bf308c176")
-	copy(uname.Release[:], "6.12.5-orbstack-00287-gf8da5d508983")
+	copy(uname.Release[:], "6.5.0-1024-aws")
 	copy(uname.Sysname[:], "Linux")
 	copy(uname.Version[:], "#19 SMP Tue Dec 17 08:07:20 UTC 2024")
 	return nil
