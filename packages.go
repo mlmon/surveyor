@@ -43,7 +43,7 @@ func Packages() (*source.Records, error) {
 				continue
 			}
 
-			// TODO: should probably validate the header and exit early.
+			// TODO: should probably validate the header and exit early if the output is bad.
 			if a[1] != "ii" {
 				continue
 			}
