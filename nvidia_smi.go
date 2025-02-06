@@ -25,23 +25,17 @@ func NvidiaSmi() (*source.Records, error) {
 		return nil, err
 	}
 
-	r := csv.NewReader(bytes.NewReader(b))
-	header, err := r.Read()
+	rows, err := csv.NewReader(bytes.NewReader(b)).ReadAll()
 	if err != nil {
 		return nil, err
 	}
 
-	first, err := r.Read()
-	if err != nil {
-		return nil, err
+	if len(rows) < 2 || len(rows[0]) != len(rows[1]) {
+		return nil, fmt.Errorf("expected %d columns, got %d", len(rows[0]), len(rows[1]))
 	}
 
-	if len(first) != len(header) {
-		return nil, fmt.Errorf("expected %d columns, got %d", len(header), len(first))
-	}
-
-	for i, name := range header {
-		entries = append(entries, source.Record{Key: strings.TrimSpace(name), Value: strings.TrimSpace(first[i])})
+	for i, name := range rows[0] {
+		entries = append(entries, source.Record{Key: strings.TrimSpace(name), Value: strings.TrimSpace(rows[1][i])})
 	}
 
 	return &source.Records{
