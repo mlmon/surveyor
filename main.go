@@ -1,16 +1,19 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"github.com/mlmon/surveyor/source"
+	"io"
 	"log/slog"
 	"os"
 	"sort"
 )
 
 func main() {
-	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
+	Run(os.Stdout)
+}
+
+func Run(w io.Writer) {
+	logger := slog.New(slog.NewTextHandler(w, nil))
 
 	fns := []source.Fn{
 		OsRelease("/etc/os-release"),
@@ -38,9 +41,12 @@ func main() {
 		return records[i].Source < records[j].Source
 	})
 
-	b, err := json.MarshalIndent(records, "", "  ")
-	if err != nil {
-		logger.Error("error marshaling records", "err", err)
-	}
-	fmt.Printf("%s\n", string(b))
+	/*
+		b, err := json.MarshalIndent(records, "", "  ")
+		if err != nil {
+			logger.Error("error marshaling records", "err", err)
+		}
+		fmt.Printf("%s\n", string(b))
+
+	*/
 }
