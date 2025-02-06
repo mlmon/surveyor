@@ -53,10 +53,7 @@ func Packages() (*source.Records, error) {
 func dpkgList() ([]byte, error) {
 	b, err := exec.Command("dpkg-query", "-l").Output()
 	if err != nil {
-		var exitError *exec.ExitError
-		if errors.As(err, &exitError) {
-			return nil, exitError
-		}
+		return nil, err
 	}
 
 	return b, nil
