@@ -7,9 +7,5 @@ import (
 var Which = which
 
 func which(binary string) bool {
-	err := exec.Command("which", binary).Run()
-	if err != nil {
-		return false
-	}
-	return true
+	return exec.Command("which", binary).Run() == nil
 }

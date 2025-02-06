@@ -43,10 +43,5 @@ func NvidiaSmi() (*source.Records, error) {
 }
 
 func nvidiaQuery() ([]byte, error) {
-	b, err := exec.Command("nvidia-smi", "--format=csv", "--query-gpu=gpu_name,vbios_version,driver_version,inforom.oem,inforom.ecc,inforom.img,compute_cap").Output()
-	if err != nil {
-		return nil, err
-	}
-
-	return b, nil
+	return exec.Command("nvidia-smi", "--format=csv", "--query-gpu=gpu_name,vbios_version,driver_version,inforom.oem,inforom.ecc,inforom.img,compute_cap").Output()
 }
