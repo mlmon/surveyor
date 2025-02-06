@@ -6,6 +6,7 @@ import (
 	"github.com/mlmon/surveyor/source"
 	"log/slog"
 	"os"
+	"sort"
 )
 
 func main() {
@@ -14,8 +15,7 @@ func main() {
 	fns := []source.Fn{
 		OsRelease("/etc/os-release"),
 		KernelModules("/proc/modules", "/lib/modules"),
-		// TODO: Nvidia SMI
-		// TODO: lsmod+modinfo
+		NvidiaSmi,
 		Packages,
 		ProcFS("/proc/sys"),
 		Uname,
@@ -28,9 +28,15 @@ func main() {
 			logger.Error("error processing source", "err", err)
 			continue
 		}
+		// sort the entries by key so that 2 or more sets can easily be compared.
+		sort.Sort(rec.Entries)
 		records = append(records, rec)
 		logger.Info("processed source", "source", rec.Source, "entries", len(rec.Entries))
 	}
+
+	sort.Slice(records, func(i, j int) bool {
+		return records[i].Source < records[j].Source
+	})
 
 	b, err := json.MarshalIndent(records, "", "  ")
 	if err != nil {

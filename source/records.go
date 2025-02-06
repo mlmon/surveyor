@@ -9,6 +9,10 @@ type Records struct {
 
 type Entries []Record
 
+func (a Entries) Len() int           { return len(a) }
+func (a Entries) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a Entries) Less(i, j int) bool { return a[i].Key < a[j].Key }
+
 type Record struct {
 	Key   string `json:"key"`
 	Value string `json:"value"`
