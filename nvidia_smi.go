@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/csv"
 	"errors"
-	"fmt"
 	"github.com/mlmon/surveyor/source"
 	"os/exec"
 	"strings"
@@ -12,7 +11,6 @@ import (
 
 var NvidiaQuery = nvidiaQuery
 
-// nvidia-smi --format=csv --query-gpu=gpu_name,vbios_version,driver_version,inforom.oem,inforom.ecc,inforom.img,compute_cap
 func NvidiaSmi() (*source.Records, error) {
 	var entries source.Entries
 	var hasNvidiaSmi = Which("nvidia-smi")
@@ -30,8 +28,8 @@ func NvidiaSmi() (*source.Records, error) {
 		return nil, err
 	}
 
-	if len(rows) < 2 || len(rows[0]) != len(rows[1]) {
-		return nil, fmt.Errorf("expected %d columns, got %d", len(rows[0]), len(rows[1]))
+	if len(rows) < 2 {
+		return nil, errors.New("expected at least 1 data row, got header")
 	}
 
 	for i, name := range rows[0] {
