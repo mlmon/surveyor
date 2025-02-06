@@ -10,18 +10,6 @@ import (
 	"strings"
 )
 
-func which(binary string) bool {
-	err := exec.Command("which", binary).Run()
-	if err != nil {
-		var exitError *exec.ExitError
-		if errors.As(err, &exitError) {
-			return exitError.ExitCode() == 0
-		}
-	}
-	return true
-}
-
-var Which = which
 var DpkgList = dpkgList
 
 var reDpkg = regexp.MustCompile(`^(\S+)\s+(\S+)\s+(\S+)`)
@@ -47,7 +35,7 @@ func Packages() (*source.Records, error) {
 			if a[1] != "ii" {
 				continue
 			}
-			entries = append(entries, source.Record{a[2], a[3]})
+			entries = append(entries, source.Record{Key: a[2], Value: a[3]})
 		}
 		if err := scanner.Err(); err != nil {
 			return nil, err
