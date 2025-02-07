@@ -1,15 +1,14 @@
-package main
+package source
 
 import (
-	"github.com/mlmon/surveyor/source"
 	"os"
 	"path/filepath"
 	"strings"
 )
 
-func ProcFS(procfs string) source.Fn {
-	return func() (*source.Records, error) {
-		var records []source.Record
+func ProcFS(procfs string) Fn {
+	return func() (*Records, error) {
+		var records []Record
 
 		err := filepath.Walk(procfs, func(path string, info os.FileInfo, err error) error {
 			if err != nil {
@@ -34,18 +33,14 @@ func ProcFS(procfs string) source.Fn {
 			// Replace "/" with "."
 			paramName := strings.ReplaceAll(relative, "/", ".")
 
-			records = append(records, source.Record{Key: paramName, Value: value})
+			records = append(records, Record{Key: paramName, Value: value})
 
 			return nil
 		})
 
-		if err != nil {
-			return nil, err
-		}
-
-		return &source.Records{
+		return &Records{
 			Source:  "procfs",
 			Entries: records,
-		}, nil
+		}, err
 	}
 }

@@ -1,13 +1,12 @@
-package main
+package source
 
 import (
 	"bufio"
-	"github.com/mlmon/surveyor/source"
 	"os"
 	"strings"
 )
 
-func OsRelease(path string) source.Fn {
+func OsRelease(path string) Fn {
 	var accept = map[string]bool{
 		"pretty_name":      true,
 		"name":             true,
@@ -15,14 +14,14 @@ func OsRelease(path string) source.Fn {
 		"version":          true,
 		"version_codename": true,
 	}
-	return func() (*source.Records, error) {
+	return func() (*Records, error) {
 		r, err := os.Open(path)
 		if err != nil {
 			return nil, err
 		}
 		defer r.Close()
 
-		var entries []source.Record
+		var entries []Record
 		scanner := bufio.NewScanner(r)
 		for scanner.Scan() {
 			ln := scanner.Text()
@@ -46,13 +45,13 @@ func OsRelease(path string) source.Fn {
 			if v[0] == '"' && v[len(v)-1] == '"' {
 				v = v[1 : len(v)-1]
 			}
-			entries = append(entries, source.Record{Key: k, Value: v})
+			entries = append(entries, Record{Key: k, Value: v})
 		}
 		if err := scanner.Err(); err != nil {
 			return nil, err
 		}
 
-		return &source.Records{
+		return &Records{
 			Source:  "os-release",
 			Entries: entries,
 		}, nil

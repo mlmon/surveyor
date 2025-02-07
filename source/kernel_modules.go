@@ -1,10 +1,10 @@
-package main
+package source
 
 import (
 	"bufio"
 	"debug/elf"
 	"errors"
-	"github.com/mlmon/surveyor/source"
+
 	"golang.org/x/sys/unix"
 	"log"
 	"os"
@@ -12,8 +12,8 @@ import (
 	"strings"
 )
 
-func KernelModules(procPath string, moduleBasePath string) source.Fn {
-	return func() (*source.Records, error) {
+func KernelModules(procPath string, moduleBasePath string) Fn {
+	return func() (*Records, error) {
 		moduleNames, err := readProcModules(procPath)
 		if err != nil {
 			return nil, err
@@ -30,14 +30,14 @@ func KernelModules(procPath string, moduleBasePath string) source.Fn {
 			return nil, err
 		}
 
-		return &source.Records{
+		return &Records{
 			Source:  "kernel-modules",
 			Entries: entries,
 		}, nil
 	}
 }
 
-func moduleVersions(activeModules []string, moduleBasePath string) (source.Entries, error) {
+func moduleVersions(activeModules []string, moduleBasePath string) (Entries, error) {
 	r, err := os.Open(filepath.Join(moduleBasePath, "modules.dep"))
 	if err != nil {
 		return nil, err
@@ -63,9 +63,9 @@ func moduleVersions(activeModules []string, moduleBasePath string) (source.Entri
 		m[meta.Name] = meta.Version
 	}
 
-	var entries source.Entries
+	var entries Entries
 	for _, n := range activeModules {
-		entries = append(entries, source.Record{Key: n, Value: m[n]})
+		entries = append(entries, Record{Key: n, Value: m[n]})
 	}
 	return entries, nil
 }

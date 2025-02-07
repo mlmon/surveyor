@@ -1,18 +1,17 @@
-package main_test
+package source_test
 
 import (
 	a "github.com/gogunit/gunit/hammy"
-	"github.com/mlmon/surveyor"
 	"github.com/mlmon/surveyor/source"
 	"testing"
 )
 
 func Test_os_release_successful(t *testing.T) {
 	assert := a.New(t)
-	rec, _ := main.OsRelease("testdata/os-release")()
+	rec, _ := source.OsRelease("testdata/os-release")()
 	assert.Is(a.Struct(rec).EqualTo(&source.Records{
 		Source: "os-release",
-		Entries: []source.Record{
+		Entries: source.Entries{
 			{"pretty_name", "Ubuntu 22.04.5 LTS"},
 			{"name", "Ubuntu"},
 			{"version_id", "22.04"},
@@ -24,6 +23,6 @@ func Test_os_release_successful(t *testing.T) {
 
 func Test_os_release_failure(t *testing.T) {
 	assert := a.New(t)
-	_, err := main.OsRelease("testdata/os-release-missing")()
+	_, err := source.OsRelease("testdata/os-release-missing")()
 	assert.Is(a.Error(err))
 }

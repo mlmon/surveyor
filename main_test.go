@@ -13,7 +13,9 @@ func Test_run(t *testing.T) {
 	assert := a.New(t)
 
 	var buf bytes.Buffer
-	main.Run(&buf)
+	rc := main.Run(&buf)
+
+	assert.Is(a.Number(rc).IsZero())
 
 	s := buf.String()
 	assert.Is(a.String(s).Contains(`level=INFO msg="processed source" source=os-release entries=`))

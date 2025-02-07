@@ -1,18 +1,17 @@
-package main
+package source
 
 import (
 	"bytes"
 	"encoding/csv"
 	"errors"
-	"github.com/mlmon/surveyor/source"
 	"os/exec"
 	"strings"
 )
 
 var NvidiaQuery = nvidiaQuery
 
-func NvidiaSmi() (*source.Records, error) {
-	var entries source.Entries
+func NvidiaSmi() (*Records, error) {
+	var entries Entries
 	var hasNvidiaSmi = Which("nvidia-smi")
 	if !hasNvidiaSmi {
 		return nil, errors.New("nvidia-smi not found")
@@ -33,10 +32,10 @@ func NvidiaSmi() (*source.Records, error) {
 	}
 
 	for i, name := range rows[0] {
-		entries = append(entries, source.Record{Key: strings.TrimSpace(name), Value: strings.TrimSpace(rows[1][i])})
+		entries = append(entries, Record{Key: strings.TrimSpace(name), Value: strings.TrimSpace(rows[1][i])})
 	}
 
-	return &source.Records{
+	return &Records{
 		Source:  "nvidia-smi",
 		Entries: entries,
 	}, nil

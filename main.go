@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/mlmon/surveyor/cyclonedx"
 	"github.com/mlmon/surveyor/source"
 	"io"
 	"log/slog"
@@ -9,19 +10,32 @@ import (
 )
 
 func main() {
-	Run(os.Stdout)
+	os.Exit(Run(os.Stdout))
 }
 
-func Run(w io.Writer) {
+func Run(w io.Writer) int {
 	logger := slog.New(slog.NewTextHandler(w, nil))
 
+	records := collect(logger)
+
+	sbom, err := cyclonedx.From(records)
+	if err != nil {
+		logger.Error("error mapping cyclonedx sbom", "err", err)
+		return 1
+	}
+	_ = sbom
+
+	return 0
+}
+
+func collect(logger *slog.Logger) *source.RecordSet {
 	fns := []source.Fn{
-		OsRelease("/etc/os-release"),
-		KernelModules("/proc/modules", "/lib/modules"),
-		NvidiaSmi,
-		Packages,
-		ProcFS("/proc/sys"),
-		Uname,
+		source.OsRelease("/etc/os-release"),
+		source.KernelModules("/proc/modules", "/lib/modules"),
+		source.NvidiaSmi,
+		source.Packages,
+		source.ProcFS("/proc/sys"),
+		source.Uname,
 	}
 
 	var records []*source.Records
@@ -40,13 +54,7 @@ func Run(w io.Writer) {
 	sort.Slice(records, func(i, j int) bool {
 		return records[i].Source < records[j].Source
 	})
-
-	/*
-		b, err := json.MarshalIndent(records, "", "  ")
-		if err != nil {
-			logger.Error("error marshaling records", "err", err)
-		}
-		fmt.Printf("%s\n", string(b))
-
-	*/
+	return &source.RecordSet{
+		Records: records,
+	}
 }

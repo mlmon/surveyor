@@ -2,6 +2,10 @@ package source
 
 type Fn func() (*Records, error)
 
+type RecordSet struct {
+	Records []*Records
+}
+
 type Records struct {
 	Source  string  `json:"source"`
 	Entries Entries `json:"entries"`

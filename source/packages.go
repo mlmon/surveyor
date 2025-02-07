@@ -1,10 +1,9 @@
-package main
+package source
 
 import (
 	"bufio"
 	"bytes"
 	"errors"
-	"github.com/mlmon/surveyor/source"
 	"os/exec"
 	"regexp"
 	"strings"
@@ -14,8 +13,10 @@ var DpkgList = dpkgList
 
 var reDpkg = regexp.MustCompile(`^(\S+)\s+(\S+)\s+(\S+)`)
 
-func Packages() (*source.Records, error) {
-	var entries source.Entries
+const PackageList = "package-list"
+
+func Packages() (*Records, error) {
+	var entries Entries
 	var hasDpkg = Which("dpkg-query")
 
 	if hasDpkg {
@@ -35,7 +36,7 @@ func Packages() (*source.Records, error) {
 			if a[1] != "ii" {
 				continue
 			}
-			entries = append(entries, source.Record{Key: a[2], Value: a[3]})
+			entries = append(entries, Record{Key: a[2], Value: a[3]})
 		}
 		if err := scanner.Err(); err != nil {
 			return nil, err
@@ -44,8 +45,8 @@ func Packages() (*source.Records, error) {
 		return nil, errors.New("no package manager found")
 	}
 
-	return &source.Records{
-		Source:  "package-list",
+	return &Records{
+		Source:  PackageList,
 		Entries: entries,
 	}, nil
 }
