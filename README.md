@@ -2,6 +2,7 @@
 
 [![codecov](https://codecov.io/gh/mlmon/surveyor/graph/badge.svg?token=QGGV4Y1EMX)](https://codecov.io/gh/mlmon/surveyor)
 [![test](https://github.com/mlmon/surveyor/actions/workflows/go.yml/badge.svg)](https://github.com/mlmon/surveyor/actions/workflows/go.yml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/mlmon/surveyor)](https://goreportcard.com/report/github.com/mlmon/surveyor)
 
 Collects common configuration elements from a linux host taht are important to ML workloads.
 
