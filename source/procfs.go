@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+const Procfs = "procfs"
+
 func ProcFS(procfs string) Fn {
 	return func() (*Records, error) {
 		var records []Record
@@ -39,7 +41,7 @@ func ProcFS(procfs string) Fn {
 		})
 
 		return &Records{
-			Source:  "procfs",
+			Source:  Procfs,
 			Entries: records,
 		}, err
 	}

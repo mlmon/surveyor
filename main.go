@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/mlmon/surveyor/cyclonedx"
 	"github.com/mlmon/surveyor/source"
 	"io"
@@ -23,7 +25,21 @@ func Run(w io.Writer) int {
 		logger.Error("error mapping cyclonedx sbom", "err", err)
 		return 1
 	}
-	_ = sbom
+
+	path := fmt.Sprintf("bom-%s.cdx.json", sbom.SerialNumber[9:])
+	f, err := os.Create(path)
+	if err != nil {
+		logger.Error("error creating CycloneDX SBOM file", "err", err)
+		return 2
+	}
+	defer f.Close()
+
+	err = json.NewEncoder(f).Encode(sbom)
+	if err != nil {
+		logger.Error("error writing CycloneDX SBOM", "err", err)
+		return 3
+	}
+	logger.Info("wrote CycloneDX SBOM", "path", path)
 
 	return 0
 }

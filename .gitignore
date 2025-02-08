@@ -1,3 +1,4 @@
 .idea
 /surveyor
 /*.out
+/*.cdx.json
