@@ -6,6 +6,7 @@ import (
 	"bytes"
 	a "github.com/gogunit/gunit/hammy"
 	"github.com/mlmon/surveyor"
+	"github.com/mlmon/surveyor/cyclonedx"
 	"testing"
 )
 
