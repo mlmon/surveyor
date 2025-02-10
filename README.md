@@ -5,22 +5,20 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/mlmon/surveyor)](https://goreportcard.com/report/github.com/mlmon/surveyor)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/mlmon/surveyor)
 
-Collects common configuration elements from a linux host taht are important to ML workloads.
+Collects common configuration elements from a linux host that are important to ML workloads including:
 
-# Architecture
-
-* Collector - 
-* Aggregator - aggregates
+* kernel modules.
+* nvidia SMI details.
+* OS release.
+* package list.
+* uname.
+* sysctl.
 
 # Data Format
 
-| Name   | Description               |
-|--------|---------------------------|
-| Source | Origin of the data        |
-| Name   | Index key                 |
-| Value  | Value assigned to the key |
+Currently the default is to output a CycloneDX JSON compatible file.
 
-## Example
+## Example Data
 
 | Source          | Name         | Value                                |
 |-----------------|--------------|--------------------------------------|
