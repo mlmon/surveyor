@@ -4,6 +4,7 @@
 [![test](https://github.com/mlmon/surveyor/actions/workflows/go.yml/badge.svg)](https://github.com/mlmon/surveyor/actions/workflows/go.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/mlmon/surveyor)](https://goreportcard.com/report/github.com/mlmon/surveyor)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/mlmon/surveyor)
+[![CodeQL Advanced](https://github.com/mlmon/surveyor/actions/workflows/codeql.yml/badge.svg)](https://github.com/mlmon/surveyor/actions/workflows/codeql.yml)
 
 Collects common configuration elements from a linux host that are important to ML workloads including:
 
