@@ -1,0 +1,42 @@
+name: release
+on:
+  # Test that it works on pull_request; goreleaser goes into snapshot mode if not a tag.
+  pull_request:
+  push:
+    tags:
+      - v*
+
+permissions:
+  # goreleaser writes to the releases api
+  contents: write
+
+jobs:
+  goreleaser:
+    runs-on: ubuntu-latest
+    env:
+      flags: ""
+
+    steps:
+      - if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+        run: echo "flags=--snapshot" >> $GITHUB_ENV
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch git tags
+        run: git fetch --force --tags
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+
+      - name: Go Release
+        uses: goreleaser/goreleaser-action@v4
+        with:
+          version: latest
+          args: release --rm-dist ${{ env.flags }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
