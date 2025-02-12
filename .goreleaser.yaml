@@ -28,6 +28,9 @@ builds:
       - arm64
     mod_timestamp: "{{ .CommitTimestamp }}"
 
+archives:
+  - formats: [ 'binary' ]
+
 changelog:
   sort: asc
   filters:
