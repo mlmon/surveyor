@@ -12,14 +12,13 @@ before:
   hooks:
     # You may remove this if you don't use go modules.
     - go mod tidy
-    # you may remove this if you don't need go generate
-    - go generate ./...
 
 builds:
   - env:
       - CGO_ENABLED=0
-    gcflags:
-      - all=-trimpath={{.Env.GOPATH}}
+    flags:
+      - -mod=readonly
+      - -trimpath
     ldflags:
       - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}}
     goos:

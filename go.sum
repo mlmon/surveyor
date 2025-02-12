@@ -1,9 +1,5 @@
-github.com/gogunit/gunit v0.0.0-20230814152309-a46c72284d69 h1:RRgqiGjWn4A4G9jpeNqIaLItVyrSTobat+hKqlZoC58=
-github.com/gogunit/gunit v0.0.0-20230814152309-a46c72284d69/go.mod h1:I4QQaDByrW39/1xk0D12+ANed4Yx6bOm/s+wa53ZnWs=
 github.com/gogunit/gunit v0.0.0-20250207192312-5ddc981c9485 h1:8/sU6dYOM7rTf1WNSa4P83noPfK4NlQCVTKfC/h5Dm8=
 github.com/gogunit/gunit v0.0.0-20250207192312-5ddc981c9485/go.mod h1:I4QQaDByrW39/1xk0D12+ANed4Yx6bOm/s+wa53ZnWs=
-github.com/google/go-cmp v0.5.9 h1:O2Tfq5qg4qc4AmwVlvv0oLiVAGB7enBSJ2x2DqQFi38=
-github.com/google/go-cmp v0.5.9/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
 github.com/google/go-cmp v0.6.0 h1:ofyhxvXcZhMsU5ulbFiLKl/XBFqE1GSq7atu8tAmTRI=
 github.com/google/go-cmp v0.6.0/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
 golang.org/x/sys v0.29.0 h1:TPYlXGxvx1MGTn2GiZDhnjPA9wZzZeGKHHmKhHYvgaU=
