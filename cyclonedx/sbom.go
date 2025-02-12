@@ -35,7 +35,8 @@ type Component struct {
 	Name string        `json:"name"`
 
 	// optional fields
-	Version string `json:"version"`
+	Version string   `json:"version"`
+	Tags    []string `json:"tags,omitempty"`
 }
 
 // ComponentType defined in 1.4 spec.
@@ -72,7 +73,7 @@ func From(records *source.RecordSet) (*SBOM, error) {
 	for _, record := range records.Records {
 		var componentType = Library
 
-		if record.Source == source.Procfs {
+		if record.Source == source.Procfs || record.Source == source.CmdLine {
 			componentType = File
 		} else if record.Source == "uname" {
 			componentType = OperatingSystem
@@ -99,6 +100,7 @@ func From(records *source.RecordSet) (*SBOM, error) {
 				Name:    name,
 				Version: version,
 				Type:    componentType,
+				Tags:    []string{record.Source},
 			})
 		}
 	}

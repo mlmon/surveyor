@@ -35,6 +35,39 @@ func Test_From_empty_recordset_yields_only_schema_headers(t *testing.T) {
 	}))
 }
 
+func Test_From_maps_cmdline_to_component(t *testing.T) {
+	assert := a.New(t)
+	records := source.RecordSet{
+		Records: []*source.Records{
+			{
+				Source: "cmdline",
+				Entries: source.Entries{
+					{"BOOT_IMAGE", "/boot/vmlinuz-6.5.0-1024-aws"},
+					{"root", "PARTUUID=2a38f7be-dcb6-4780-9e4c-c3537cb2cddd"},
+					{"ro", ""},
+					{"rd.driver.blacklist", "nouveau"},
+					{"nouveau.modeset", "0"},
+					{"processor.max_cstate", "1"},
+					{"intel_idle.max_cstate", "1"},
+					{"console", "tty1"},
+					{"console", "ttyS0"},
+					{"nvme_core.io_timeout", "4294967295"},
+					{"panic", "-1"},
+				},
+			},
+		},
+	}
+
+	sbom, _ := cyclonedx.From(&records)
+
+	assert.Is(SBOM(sbom).FirstComponent(
+		cyclonedx.Component{
+			Tags:    []string{"cmdline"},
+			Name:    "BOOT_IMAGE",
+			Version: "/boot/vmlinuz-6.5.0-1024-aws",
+			Type:    cyclonedx.File}))
+}
+
 func Test_From_maps_procfs_to_component(t *testing.T) {
 	assert := a.New(t)
 	records := source.RecordSet{
@@ -54,7 +87,8 @@ func Test_From_maps_procfs_to_component(t *testing.T) {
 		cyclonedx.Component{
 			Name:    "fs.file-max",
 			Version: "9223372036854775807",
-			Type:    cyclonedx.File}))
+			Type:    cyclonedx.File,
+			Tags:    []string{source.Procfs}}))
 }
 
 func Test_From_maps_uname_to_component(t *testing.T) {
@@ -76,6 +110,7 @@ func Test_From_maps_uname_to_component(t *testing.T) {
 			Name:    "release",
 			Version: "6.5.0-1024-aws",
 			Type:    cyclonedx.OperatingSystem,
+			Tags:    []string{"uname"},
 		}))
 }
 
@@ -98,6 +133,7 @@ func Test_From_maps_nvidia_smi_firmware_to_component(t *testing.T) {
 			Name:    "vbios",
 			Version: "96.00.A5.00.01",
 			Type:    cyclonedx.Firmware,
+			Tags:    []string{"nvidia-smi"},
 		}))
 }
 
@@ -120,6 +156,7 @@ func Test_From_maps_nvidia_smi_gpu_to_component(t *testing.T) {
 			Name:    "gpu",
 			Version: "NVIDIA H100 80GB HBM3",
 			Type:    cyclonedx.Device,
+			Tags:    []string{"nvidia-smi"},
 		}))
 }
 
@@ -142,6 +179,7 @@ func Test_From_maps_package_list_to_component(t *testing.T) {
 			Name:    "adduser",
 			Version: "3.118ubuntu5",
 			Type:    cyclonedx.Library,
+			Tags:    []string{source.PackageList},
 		}))
 }
 

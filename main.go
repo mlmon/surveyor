@@ -50,6 +50,7 @@ func collect(logger *slog.Logger) *source.RecordSet {
 		source.KernelModules("/proc/modules", "/lib/modules"),
 		source.NvidiaSmi,
 		source.Packages,
+		source.Cmdline("/proc/cmdline"),
 		source.ProcFS("/proc/sys"),
 		source.Uname,
 	}

@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+const CmdLine = "cmdline"
+
 func Cmdline(path string) Fn {
 	return func() (*Records, error) {
 		b, err := os.ReadFile(path)
