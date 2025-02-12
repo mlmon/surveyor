@@ -16,7 +16,7 @@ func Test_run(t *testing.T) {
 	assert := a.New(t)
 
 	var buf bytes.Buffer
-	rc := main.Run(&buf)
+	rc := main.Run(&buf, ".")
 
 	assert.Is(a.Number(rc).IsZero())
 
