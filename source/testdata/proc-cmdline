@@ -1,0 +1,1 @@
+BOOT_IMAGE=/boot/vmlinuz-6.5.0-1024-aws root=PARTUUID=2a38f7be-dcb6-4780-9e4c-c3537cb2cddd ro rd.driver.blacklist=nouveau nouveau.modeset=0 processor.max_cstate=1 intel_idle.max_cstate=1 console=tty1 console=ttyS0 nvme_core.io_timeout=4294967295 panic=-1
