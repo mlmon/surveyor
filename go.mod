@@ -1,6 +1,6 @@
 module github.com/mlmon/surveyor
 
-go 1.23.6
+go 1.24.4
 
 require (
 	github.com/gogunit/gunit v0.0.0-20250207192312-5ddc981c9485
