@@ -7,8 +7,10 @@ import (
 )
 
 const Procfs = "procfs"
+const NvidiaDriverParams = "nvidia_driver_params"
 
-func ProcFS(procfs string) Fn {
+func ProcSys(path string) Fn {
+	procfs := filepath.Join(path, "sys")
 	return func() (*Records, error) {
 		var records []Record
 
@@ -44,5 +46,39 @@ func ProcFS(procfs string) Fn {
 			Source:  Procfs,
 			Entries: records,
 		}, err
+	}
+}
+
+func ProcNvidiaParams(path string) Fn {
+	params := filepath.Join(path, "driver/nvidia/params")
+	return func() (*Records, error) {
+		var records []Record
+
+		data, err := os.ReadFile(params)
+		if err != nil {
+			return nil, err
+		}
+
+		lines := strings.Split(string(data), "\n")
+		for _, line := range lines {
+			line = strings.TrimSpace(line)
+			if line == "" {
+				continue
+			}
+			
+			parts := strings.SplitN(line, ": ", 2)
+			if len(parts) == 2 {
+				record := Record{
+					Key:   parts[0],
+					Value: parts[1],
+				}
+				records = append(records, record)
+			}
+		}
+
+		return &Records{
+			Source:  NvidiaDriverParams,
+			Entries: records,
+		}, nil
 	}
 }

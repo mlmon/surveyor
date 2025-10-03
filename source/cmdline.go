@@ -2,6 +2,7 @@ package source
 
 import (
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -9,7 +10,7 @@ const CmdLine = "cmdline"
 
 func Cmdline(path string) Fn {
 	return func() (*Records, error) {
-		b, err := os.ReadFile(path)
+		b, err := os.ReadFile(filepath.Join(path, "cmdline"))
 		if err != nil {
 			return nil, err
 		}

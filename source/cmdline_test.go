@@ -1,9 +1,10 @@
 package source_test
 
 import (
+	"testing"
+
 	a "github.com/gogunit/gunit/hammy"
 	"github.com/mlmon/surveyor/source"
-	"testing"
 )
 
 func Test_cmdline_failure(t *testing.T) {
@@ -14,7 +15,7 @@ func Test_cmdline_failure(t *testing.T) {
 
 func Test_cmdline_success(t *testing.T) {
 	assert := a.New(t)
-	records, _ := source.Cmdline("testdata/proc-cmdline")()
+	records, _ := source.Cmdline("testdata/procfs")()
 	assert.Is(a.Struct(records).EqualTo(&source.Records{
 		Source: "cmdline",
 		Entries: source.Entries{

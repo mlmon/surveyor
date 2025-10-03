@@ -4,10 +4,11 @@ package main_test
 
 import (
 	"bytes"
+	"testing"
+
 	a "github.com/gogunit/gunit/hammy"
 	"github.com/mlmon/surveyor"
 	"github.com/mlmon/surveyor/cyclonedx"
-	"testing"
 )
 
 func Test_run(t *testing.T) {
@@ -16,7 +17,7 @@ func Test_run(t *testing.T) {
 	assert := a.New(t)
 
 	var buf bytes.Buffer
-	rc := main.Run(&buf, ".")
+	rc := main.Run(&buf, main.RunOpts{SbomPath: "."})
 
 	assert.Is(a.Number(rc).IsZero())
 

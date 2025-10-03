@@ -4,26 +4,39 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/mlmon/surveyor/cyclonedx"
-	"github.com/mlmon/surveyor/source"
 	"io"
 	"log/slog"
 	"os"
 	"path/filepath"
 	"sort"
+
+	"github.com/mlmon/surveyor/cyclonedx"
+	"github.com/mlmon/surveyor/source"
 )
 
 func main() {
-	d := flag.String("output", ".", "output directory to write sbom to")
+	var opts RunOpts
+
+	flag.StringVar(&opts.SbomPath, "out", ".", "Directory to write SBOM to")
+	flag.StringVar(&opts.ProcBase, "procbase", "/proc", "Base path for proc fs")
 	flag.Parse()
 
-	os.Exit(Run(os.Stdout, *d))
+	os.Exit(Run(os.Stdout, &opts))
 }
 
-func Run(w io.Writer, output string) int {
+type RunOpts struct {
+	SbomPath string
+	ProcBase string
+}
+
+func (opts *RunOpts) ProcPath(p string) string {
+	return filepath.Join(opts.ProcBase, p)
+}
+
+func Run(w io.Writer, opts *RunOpts) int {
 	logger := slog.New(slog.NewTextHandler(w, nil))
 
-	records := collect(logger)
+	records := collect(logger, opts)
 
 	sbom, err := cyclonedx.From(records)
 	if err != nil {
@@ -31,7 +44,7 @@ func Run(w io.Writer, output string) int {
 		return 1
 	}
 
-	path := filepath.Join(output, fmt.Sprintf("bom-%s.cdx.json", sbom.SerialNumber[9:]))
+	path := filepath.Join(opts.SbomPath, fmt.Sprintf("bom-%s.cdx.json", sbom.SerialNumber[9:]))
 	f, err := os.Create(path)
 	if err != nil {
 		logger.Error("error creating CycloneDX SBOM file", "err", err)
@@ -49,14 +62,15 @@ func Run(w io.Writer, output string) int {
 	return 0
 }
 
-func collect(logger *slog.Logger) *source.RecordSet {
+func collect(logger *slog.Logger, opts *RunOpts) *source.RecordSet {
 	fns := []source.Fn{
 		source.OsRelease("/etc/os-release"),
-		source.KernelModules("/proc/modules", "/lib/modules"),
+		source.KernelModules(opts.ProcBase, "/lib/modules"),
 		source.NvidiaSmi,
 		source.Packages,
-		source.Cmdline("/proc/cmdline"),
-		source.ProcFS("/proc/sys"),
+		source.Cmdline(opts.ProcBase),
+		source.ProcSys(opts.ProcBase),
+		source.ProcNvidiaParams(opts.ProcBase),
 		source.Uname,
 	}
 

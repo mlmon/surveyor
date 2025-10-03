@@ -5,16 +5,18 @@ import (
 	"debug/elf"
 	"errors"
 
-	"golang.org/x/sys/unix"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"golang.org/x/sys/unix"
 )
 
-func KernelModules(procPath string, moduleBasePath string) Fn {
+func KernelModules(path string, moduleBasePath string) Fn {
+	module_list := filepath.Join(path, "modules")
 	return func() (*Records, error) {
-		moduleNames, err := readProcModules(procPath)
+		moduleNames, err := readProcModules(module_list)
 		if err != nil {
 			return nil, err
 		}
