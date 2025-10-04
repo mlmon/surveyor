@@ -121,7 +121,7 @@ func modInfo(modPath string) (*ModuleMetadata, error) {
 }
 
 func readProcModules(procPath string) ([]string, error) {
-	// read from proc modules
+	// read from /proc/modules (or other overridden path)
 	r, err := os.Open(procPath)
 	if err != nil {
 		return nil, err

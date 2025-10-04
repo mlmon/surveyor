@@ -17,7 +17,7 @@ func Test_run(t *testing.T) {
 	assert := a.New(t)
 
 	var buf bytes.Buffer
-	rc := main.Run(&buf, main.RunOpts{SbomPath: "."})
+	rc := main.Run(&buf, &main.RunOpts{SbomPath: ".", ProcBase: "/proc"})
 
 	assert.Is(a.Number(rc).IsZero())
 
